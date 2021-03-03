@@ -1,0 +1,17 @@
+{
+	"name": "SourceDataset_082",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "GoogleCloudStorageOrigen",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "GoogleCloudStorageLocation",
+				"bucketName": "azure_djklgh"
+			}
+		}
+	}
+}
