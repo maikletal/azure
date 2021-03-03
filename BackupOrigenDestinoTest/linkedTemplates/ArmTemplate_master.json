@@ -15,6 +15,14 @@
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"AzureBlobStorageOrigen\""
 		},
+		"GoogleCloudStorageOrigen_secretAccessKey": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"secretAccessKey\"de \"GoogleCloudStorageOrigen\""
+		},
+		"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
+			"type": "string",
+			"defaultValue": "GOOG5MGH3Z2PYYCJL36SA6JD"
+		},
 		"Trigger_iom_properties_pipeline_parameters_windowStart": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowStartTime"
@@ -63,6 +71,12 @@
 					},
 					"AzureBlobStorageOrigen_connectionString": {
 						"value": "[parameters('AzureBlobStorageOrigen_connectionString')]"
+					},
+					"GoogleCloudStorageOrigen_secretAccessKey": {
+						"value": "[parameters('GoogleCloudStorageOrigen_secretAccessKey')]"
+					},
+					"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
+						"value": "[parameters('GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId')]"
 					},
 					"Trigger_iom_properties_pipeline_parameters_windowStart": {
 						"value": "[parameters('Trigger_iom_properties_pipeline_parameters_windowStart')]"
