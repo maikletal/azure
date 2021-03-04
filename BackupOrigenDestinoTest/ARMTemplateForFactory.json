@@ -23,13 +23,17 @@
 			"type": "string",
 			"defaultValue": "GOOG5MGH3Z2PYYCJL36SA6JD"
 		},
-		"Trigger_sqn_properties_pipeline_parameters_windowStart": {
+		"DetectChanges_properties_BackupOrigenDestino_parameters_windowStart": {
 			"type": "string",
-			"defaultValue": "@trigger().outputs.windowStartTime"
+			"defaultValue": "2021-03-03T16:48:00Z"
 		},
-		"Trigger_sqn_properties_pipeline_parameters_windowEnd": {
+		"DetectChanges_properties_BackupOrigenDestino_parameters_windowEnd": {
 			"type": "string",
-			"defaultValue": "@trigger().outputs.windowEndTime"
+			"defaultValue": "2021-03-03T16:48:00Z"
+		},
+		"DetectChanges_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/a0deb128-0067-41f1-856f-a2ad220e16f1/resourceGroups/cloud-shell-storage-westeurope/providers/Microsoft.Storage/storageAccounts/csb1003200117a57cd0"
 		}
 	},
 	"variables": {
@@ -371,22 +375,6 @@
 			"properties": {
 				"annotations": [],
 				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "BackupOrigenDestino",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"windowStart": {
-							"type": "Expression",
-							"value": "[parameters('Trigger_sqn_properties_pipeline_parameters_windowStart')]"
-						},
-						"windowEnd": {
-							"type": "Expression",
-							"value": "[parameters('Trigger_sqn_properties_pipeline_parameters_windowEnd')]"
-						}
-					}
-				},
 				"type": "TumblingWindowTrigger",
 				"typeProperties": {
 					"frequency": "Minute",
@@ -398,6 +386,37 @@
 						"intervalInSeconds": 30
 					},
 					"dependsOn": []
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DetectChanges')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "BackupOrigenDestino",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"windowStart": "[parameters('DetectChanges_properties_BackupOrigenDestino_parameters_windowStart')]",
+							"windowEnd": "[parameters('DetectChanges_properties_BackupOrigenDestino_parameters_windowEnd')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/origen/blobs/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('DetectChanges_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
 				}
 			},
 			"dependsOn": [

@@ -17,11 +17,14 @@
 		"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
 			"value": "GOOG5MGH3Z2PYYCJL36SA6JD"
 		},
-		"Trigger_sqn_properties_pipeline_parameters_windowStart": {
-			"value": "@trigger().outputs.windowStartTime"
+		"DetectChanges_properties_BackupOrigenDestino_parameters_windowStart": {
+			"value": "2021-03-03T16:48:00Z"
 		},
-		"Trigger_sqn_properties_pipeline_parameters_windowEnd": {
-			"value": "@trigger().outputs.windowEndTime"
+		"DetectChanges_properties_BackupOrigenDestino_parameters_windowEnd": {
+			"value": "2021-03-03T16:48:00Z"
+		},
+		"DetectChanges_properties_typeProperties_scope": {
+			"value": "/subscriptions/a0deb128-0067-41f1-856f-a2ad220e16f1/resourceGroups/cloud-shell-storage-westeurope/providers/Microsoft.Storage/storageAccounts/csb1003200117a57cd0"
 		},
 		"containerUri": {
 			"value": ""
