@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_126",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorageBck",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "backup"
+			}
+		}
+	}
+}
