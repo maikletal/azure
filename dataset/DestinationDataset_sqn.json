@@ -2,7 +2,7 @@
 	"name": "DestinationDataset_sqn",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorageOrigen",
+			"referenceName": "AzureBlobStorageBck",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
