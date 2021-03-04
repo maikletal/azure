@@ -23,14 +23,6 @@
 			"type": "string",
 			"defaultValue": "GOOG5MGH3Z2PYYCJL36SA6JD"
 		},
-		"DetectChanges_properties_BackupOrigenDestino_parameters_windowStart": {
-			"type": "string",
-			"defaultValue": "2021-03-03T16:48:00Z"
-		},
-		"DetectChanges_properties_BackupOrigenDestino_parameters_windowEnd": {
-			"type": "string",
-			"defaultValue": "2021-03-03T16:48:00Z"
-		},
 		"DetectChanges_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/a0deb128-0067-41f1-856f-a2ad220e16f1/resourceGroups/cloud-shell-storage-westeurope/providers/Microsoft.Storage/storageAccounts/csb1003200117a57cd0"
@@ -73,12 +65,6 @@
 					},
 					"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
 						"value": "[parameters('GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId')]"
-					},
-					"DetectChanges_properties_BackupOrigenDestino_parameters_windowStart": {
-						"value": "[parameters('DetectChanges_properties_BackupOrigenDestino_parameters_windowStart')]"
-					},
-					"DetectChanges_properties_BackupOrigenDestino_parameters_windowEnd": {
-						"value": "[parameters('DetectChanges_properties_BackupOrigenDestino_parameters_windowEnd')]"
 					},
 					"DetectChanges_properties_typeProperties_scope": {
 						"value": "[parameters('DetectChanges_properties_typeProperties_scope')]"

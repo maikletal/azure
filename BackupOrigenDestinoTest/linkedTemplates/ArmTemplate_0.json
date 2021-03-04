@@ -23,14 +23,6 @@
 			"type": "string",
 			"defaultValue": "GOOG5MGH3Z2PYYCJL36SA6JD"
 		},
-		"DetectChanges_properties_BackupOrigenDestino_parameters_windowStart": {
-			"type": "string",
-			"defaultValue": "2021-03-03T16:48:00Z"
-		},
-		"DetectChanges_properties_BackupOrigenDestino_parameters_windowEnd": {
-			"type": "string",
-			"defaultValue": "2021-03-03T16:48:00Z"
-		},
 		"DetectChanges_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/a0deb128-0067-41f1-856f-a2ad220e16f1/resourceGroups/cloud-shell-storage-westeurope/providers/Microsoft.Storage/storageAccounts/csb1003200117a57cd0"
@@ -83,6 +75,36 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DetectChanges')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "BackupOrigenDestino",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/origen/blobs/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('DetectChanges_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/BackupOrigenDestino')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Trigger_sqn')]",
@@ -195,97 +217,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/BackupOrigenDestino')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_sqn",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "origen//"
-							},
-							{
-								"name": "Destination",
-								"value": "backup//"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"modifiedDatetimeStart": {
-										"value": "@pipeline().parameters.windowStart",
-										"type": "Expression"
-									},
-									"modifiedDatetimeEnd": {
-										"value": "@pipeline().parameters.windowEnd",
-										"type": "Expression"
-									},
-									"wildcardFileName": "*"
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"skipErrorFile": {
-								"fileMissing": true
-							},
-							"validateDataConsistency": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_sqn",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_sqn",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"windowStart": {
-						"type": "String"
-					},
-					"windowEnd": {
-						"type": "String"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset_sqn')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDataset_sqn')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/GoogleCloudToAzure')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -360,6 +291,81 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/BackupOrigenDestino')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_sqn",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "origen//"
+							},
+							{
+								"name": "Destination",
+								"value": "backup//"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"skipErrorFile": {
+								"fileMissing": true
+							},
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_sqn",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_sqn",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_sqn')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_sqn')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Trigger_082')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -388,39 +394,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/GoogleCloudToAzure')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DetectChanges')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "BackupOrigenDestino",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"windowStart": "[parameters('DetectChanges_properties_BackupOrigenDestino_parameters_windowStart')]",
-							"windowEnd": "[parameters('DetectChanges_properties_BackupOrigenDestino_parameters_windowEnd')]"
-						}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/origen/blobs/",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('DetectChanges_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/BackupOrigenDestino')]"
 			]
 		}
 	]
