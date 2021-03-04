@@ -1,0 +1,17 @@
+{
+	"name": "DetectChanges",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/origen/blobs/",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/a0deb128-0067-41f1-856f-a2ad220e16f1/resourceGroups/cloud-shell-storage-westeurope/providers/Microsoft.Storage/storageAccounts/csb1003200117a57cd0",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
