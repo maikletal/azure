@@ -29,14 +29,6 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"modifiedDatetimeStart": {
-								"value": "@pipeline().parameters.windowStart",
-								"type": "Expression"
-							},
-							"modifiedDatetimeEnd": {
-								"value": "@pipeline().parameters.windowEnd",
-								"type": "Expression"
-							},
 							"wildcardFileName": "*"
 						},
 						"formatSettings": {
@@ -70,14 +62,6 @@
 				]
 			}
 		],
-		"parameters": {
-			"windowStart": {
-				"type": "String"
-			},
-			"windowEnd": {
-				"type": "String"
-			}
-		},
 		"annotations": []
 	}
 }
