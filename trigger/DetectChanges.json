@@ -8,6 +8,10 @@
 				"pipelineReference": {
 					"referenceName": "BackupOrigenDestino",
 					"type": "PipelineReference"
+				},
+				"parameters": {
+					"windowStart": "2021-03-03T16:48:00Z",
+					"windowEnd": "2021-03-03T16:48:00Z"
 				}
 			}
 		],
