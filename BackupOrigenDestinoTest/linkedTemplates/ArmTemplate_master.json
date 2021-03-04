@@ -23,14 +23,6 @@
 			"type": "string",
 			"defaultValue": "GOOG5MGH3Z2PYYCJL36SA6JD"
 		},
-		"Trigger_iom_properties_pipeline_parameters_windowStart": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowStartTime"
-		},
-		"Trigger_iom_properties_pipeline_parameters_windowEnd": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowEndTime"
-		},
 		"Trigger_sqn_properties_pipeline_parameters_windowStart": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowStartTime"
@@ -77,12 +69,6 @@
 					},
 					"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
 						"value": "[parameters('GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId')]"
-					},
-					"Trigger_iom_properties_pipeline_parameters_windowStart": {
-						"value": "[parameters('Trigger_iom_properties_pipeline_parameters_windowStart')]"
-					},
-					"Trigger_iom_properties_pipeline_parameters_windowEnd": {
-						"value": "[parameters('Trigger_iom_properties_pipeline_parameters_windowEnd')]"
 					},
 					"Trigger_sqn_properties_pipeline_parameters_windowStart": {
 						"value": "[parameters('Trigger_sqn_properties_pipeline_parameters_windowStart')]"

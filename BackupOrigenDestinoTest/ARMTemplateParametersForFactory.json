@@ -17,12 +17,6 @@
 		"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
 			"value": "GOOG5MGH3Z2PYYCJL36SA6JD"
 		},
-		"Trigger_iom_properties_pipeline_parameters_windowStart": {
-			"value": "@trigger().outputs.windowStartTime"
-		},
-		"Trigger_iom_properties_pipeline_parameters_windowEnd": {
-			"value": "@trigger().outputs.windowEndTime"
-		},
 		"Trigger_sqn_properties_pipeline_parameters_windowStart": {
 			"value": "@trigger().outputs.windowStartTime"
 		},

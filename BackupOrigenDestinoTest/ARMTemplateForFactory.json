@@ -23,14 +23,6 @@
 			"type": "string",
 			"defaultValue": "GOOG5MGH3Z2PYYCJL36SA6JD"
 		},
-		"Trigger_iom_properties_pipeline_parameters_windowStart": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowStartTime"
-		},
-		"Trigger_iom_properties_pipeline_parameters_windowEnd": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowEndTime"
-		},
 		"Trigger_sqn_properties_pipeline_parameters_windowStart": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowStartTime"
@@ -210,97 +202,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/bckTest')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_iom",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "origen//"
-							},
-							{
-								"name": "Destination",
-								"value": "backup//"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"modifiedDatetimeStart": {
-										"value": "@pipeline().parameters.windowStart",
-										"type": "Expression"
-									},
-									"modifiedDatetimeEnd": {
-										"value": "@pipeline().parameters.windowEnd",
-										"type": "Expression"
-									},
-									"wildcardFileName": "*"
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"skipErrorFile": {
-								"fileMissing": true
-							},
-							"validateDataConsistency": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_iom",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_iom",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"windowStart": {
-						"type": "String"
-					},
-					"windowEnd": {
-						"type": "String"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset_iom')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDataset_iom')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_082')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -323,7 +224,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_iom')]",
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_sqn')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -342,28 +243,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageBck')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_sqn')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorageOrigen",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "backup"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageOrigen')]"
 			]
 		},
 		{
@@ -386,28 +265,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/GoogleCloudStorageOrigen')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_iom')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorageOrigen",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "origen"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageOrigen')]"
 			]
 		},
 		{
@@ -505,46 +362,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/GoogleCloudToAzure')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Trigger_iom')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "bckTest",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"windowStart": {
-							"type": "Expression",
-							"value": "[parameters('Trigger_iom_properties_pipeline_parameters_windowStart')]"
-						},
-						"windowEnd": {
-							"type": "Expression",
-							"value": "[parameters('Trigger_iom_properties_pipeline_parameters_windowEnd')]"
-						}
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 5,
-					"startTime": "2021-03-03T16:28:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/bckTest')]"
 			]
 		},
 		{
