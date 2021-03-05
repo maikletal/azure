@@ -2,10 +2,10 @@
 	"name": "Trigger_sqn",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipeline": {
 			"pipelineReference": {
-				"referenceName": "BackupOrigenDestinoTimer",
+				"referenceName": "OrigenBackupTimer",
 				"type": "PipelineReference"
 			}
 		},
