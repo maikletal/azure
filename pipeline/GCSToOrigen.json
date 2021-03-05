@@ -1,5 +1,5 @@
 {
-	"name": "GoogleCloudToAzure",
+	"name": "GCSToOrigen",
 	"properties": {
 		"activities": [
 			{
