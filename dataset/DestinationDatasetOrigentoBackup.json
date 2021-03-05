@@ -1,5 +1,5 @@
 {
-	"name": "DestinationDataset_sqn",
+	"name": "DestinationDatasetOrigentoBackup",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorageBck",
