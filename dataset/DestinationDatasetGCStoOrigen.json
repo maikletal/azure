@@ -1,5 +1,5 @@
 {
-	"name": "DestinationDataset_082",
+	"name": "DestinationDatasetGCStoOrigen",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorageOrigen",
