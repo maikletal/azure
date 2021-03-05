@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_sqn",
+				"name": "OrigenToBackupE",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
