@@ -6,7 +6,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "BackupOrigenDestino",
+					"referenceName": "OrigenToBackupEvent",
 					"type": "PipelineReference"
 				}
 			}

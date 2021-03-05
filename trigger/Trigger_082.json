@@ -5,7 +5,7 @@
 		"runtimeState": "Stopped",
 		"pipeline": {
 			"pipelineReference": {
-				"referenceName": "GoogleCloudToAzure",
+				"referenceName": "GCSToOrigen",
 				"type": "PipelineReference"
 			}
 		},
