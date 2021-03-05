@@ -49,7 +49,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_082",
+						"referenceName": "SourceDatasetGCStoOrigen",
 						"type": "DatasetReference"
 					}
 				],
