@@ -50,13 +50,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_sqn",
+						"referenceName": "SourceDatasetOrigenToBackup",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_sqn",
+						"referenceName": "DestinationDatasetOrigentoBackup",
 						"type": "DatasetReference"
 					}
 				]
