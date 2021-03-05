@@ -55,7 +55,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_082",
+						"referenceName": "DestinationDatasetGCStoOrigen",
 						"type": "DatasetReference"
 					}
 				]
