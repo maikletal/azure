@@ -6,26 +6,6 @@
 			"type": "string",
 			"metadata": "Nombre de instancia de Data Factory",
 			"defaultValue": "BackupOrigenDestinoTest"
-		},
-		"AzureBlobStorageBck_connectionString": {
-			"type": "secureString",
-			"metadata": "Cadena protegida para \"connectionString\"de \"AzureBlobStorageBck\""
-		},
-		"AzureBlobStorageOrigen_connectionString": {
-			"type": "secureString",
-			"metadata": "Cadena protegida para \"connectionString\"de \"AzureBlobStorageOrigen\""
-		},
-		"GoogleCloudStorageOrigen_secretAccessKey": {
-			"type": "secureString",
-			"metadata": "Cadena protegida para \"secretAccessKey\"de \"GoogleCloudStorageOrigen\""
-		},
-		"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
-			"type": "string",
-			"defaultValue": "GOOG5MGH3Z2PYYCJL36SA6JD"
-		},
-		"DetectChanges_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/a0deb128-0067-41f1-856f-a2ad220e16f1/resourceGroups/cloud-shell-storage-westeurope/providers/Microsoft.Storage/storageAccounts/csb1003200117a57cd0"
 		}
 	},
 	"variables": {
@@ -87,15 +67,13 @@
 						"inputs": [
 							{
 								"referenceName": "SourceDatasetOrigenToBackup",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "DestinationDatasetOrigentoBackup",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					}
@@ -161,15 +139,13 @@
 						"inputs": [
 							{
 								"referenceName": "SourceDatasetGCStoOrigen",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "DestinationDatasetGCStoOrigen",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					}
@@ -199,9 +175,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageOrigen')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDatasetOrigentoBackup')]",
@@ -221,9 +195,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageBck')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SourceDatasetGCStoOrigen')]",
@@ -243,9 +215,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/GoogleCloudStorageOrigen')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SourceDatasetOrigenToBackup')]",
@@ -265,52 +235,6 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageOrigen')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageBck')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('AzureBlobStorageBck_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageOrigen')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('AzureBlobStorageOrigen_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/GoogleCloudStorageOrigen')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "GoogleCloudStorage",
-				"typeProperties": {
-					"serviceUrl": "https://storage.googleapis.com",
-					"accessKeyId": "[parameters('GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId')]",
-					"secretAccessKey": {
-						"type": "SecureString",
-						"value": "[parameters('GoogleCloudStorageOrigen_secretAccessKey')]"
-					}
-				}
-			},
 			"dependsOn": []
 		},
 		{
@@ -325,15 +249,14 @@
 						"pipelineReference": {
 							"referenceName": "OrigenToBackupEvent",
 							"type": "PipelineReference"
-						},
-						"parameters": {}
+						}
 					}
 				],
 				"type": "BlobEventsTrigger",
 				"typeProperties": {
 					"blobPathBeginsWith": "/origen/blobs/",
 					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('DetectChanges_properties_typeProperties_scope')]",
+					"scope": "/subscriptions/a0deb128-0067-41f1-856f-a2ad220e16f1/resourceGroups/cloud-shell-storage-westeurope/providers/Microsoft.Storage/storageAccounts/csb1003200117a57cd0",
 					"events": [
 						"Microsoft.Storage.BlobCreated"
 					]
@@ -354,8 +277,7 @@
 					"pipelineReference": {
 						"referenceName": "GCSToOrigen",
 						"type": "PipelineReference"
-					},
-					"parameters": {}
+					}
 				},
 				"type": "TumblingWindowTrigger",
 				"typeProperties": {
@@ -385,8 +307,7 @@
 					"pipelineReference": {
 						"referenceName": "OrigenBackupTimer",
 						"type": "PipelineReference"
-					},
-					"parameters": {}
+					}
 				},
 				"type": "TumblingWindowTrigger",
 				"typeProperties": {
@@ -460,15 +381,13 @@
 						"inputs": [
 							{
 								"referenceName": "SourceDatasetOrigenToBackup",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "DestinationDatasetOrigentoBackup",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					}

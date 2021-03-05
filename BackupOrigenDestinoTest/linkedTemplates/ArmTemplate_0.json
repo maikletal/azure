@@ -77,29 +77,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Trigger_sqn')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 5,
-					"startTime": "2021-03-03T16:48:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_082')]",
+			"name": "[concat(parameters('factoryName'), '/DestinationDatasetGCStoOrigen')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -121,7 +99,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_sqn')]",
+			"name": "[concat(parameters('factoryName'), '/DestinationDatasetOrigentoBackup')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -143,7 +121,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_082')]",
+			"name": "[concat(parameters('factoryName'), '/SourceDatasetGCStoOrigen')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -165,7 +143,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_sqn')]",
+			"name": "[concat(parameters('factoryName'), '/SourceDatasetOrigenToBackup')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -187,13 +165,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/BackupOrigenDestino')]",
+			"name": "[concat(parameters('factoryName'), '/OrigenToBackupEvent')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy_sqn",
+						"name": "OrigenToBackupE",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -240,14 +218,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SourceDataset_sqn",
+								"referenceName": "SourceDatasetOrigenToBackup",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DestinationDataset_sqn",
+								"referenceName": "DestinationDatasetOrigentoBackup",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -257,12 +235,12 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset_sqn')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDataset_sqn')]"
+				"[concat(variables('factoryId'), '/datasets/SourceDatasetOrigenToBackup')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDatasetOrigentoBackup')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/GoogleCloudToAzure')]",
+			"name": "[concat(parameters('factoryName'), '/GCSToOrigen')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -314,14 +292,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SourceDataset_082",
+								"referenceName": "SourceDatasetGCStoOrigen",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DestinationDataset_082",
+								"referenceName": "DestinationDatasetGCStoOrigen",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -331,8 +309,83 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset_082')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDataset_082')]"
+				"[concat(variables('factoryId'), '/datasets/SourceDatasetGCStoOrigen')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDatasetGCStoOrigen')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OrigenBackupTimer')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "OrigenToBackupT",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "origen//"
+							},
+							{
+								"name": "Destination",
+								"value": "backup//"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"skipErrorFile": {
+								"fileMissing": true
+							},
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDatasetOrigenToBackup",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDatasetOrigentoBackup",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDatasetOrigenToBackup')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDatasetOrigentoBackup')]"
 			]
 		},
 		{
@@ -345,7 +398,7 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "BackupOrigenDestino",
+							"referenceName": "OrigenToBackupEvent",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -362,7 +415,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/BackupOrigenDestino')]"
+				"[concat(variables('factoryId'), '/pipelines/OrigenToBackupEvent')]"
 			]
 		},
 		{
@@ -371,10 +424,10 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipeline": {
 					"pipelineReference": {
-						"referenceName": "GoogleCloudToAzure",
+						"referenceName": "GCSToOrigen",
 						"type": "PipelineReference"
 					},
 					"parameters": {}
@@ -393,7 +446,38 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/GoogleCloudToAzure')]"
+				"[concat(variables('factoryId'), '/pipelines/GCSToOrigen')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trigger_sqn')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "OrigenBackupTimer",
+						"type": "PipelineReference"
+					},
+					"parameters": {}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 5,
+					"startTime": "2021-03-03T16:48:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/OrigenBackupTimer')]"
 			]
 		}
 	]
