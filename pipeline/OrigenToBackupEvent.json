@@ -1,5 +1,5 @@
 {
-	"name": "BackupOrigenDestinoEvent",
+	"name": "OrigenToBackupEvent",
 	"properties": {
 		"activities": [
 			{
