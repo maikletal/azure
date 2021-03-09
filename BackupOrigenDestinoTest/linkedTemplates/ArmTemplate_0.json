@@ -199,7 +199,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/EloficashStorage')]",
+			"name": "[concat(parameters('factoryName'), '/EloficashVskPtCollectionsAr1Input')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -221,7 +221,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/EloficashBackup')]",
+			"name": "[concat(parameters('factoryName'), '/EloficashVskPtCollectionsAr1InputBackup')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -235,6 +235,50 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"container": "vsk-pt-collections-ar-1-input"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/EloficashBackup')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/EloficashVskPtCollectionsAr1Output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "EloficashStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "vsk-pt-collections-ar-1-output"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/EloficashStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/EloficashVskPtCollectionsAr1OutputBackup')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "EloficashBackup",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "vsk-pt-collections-ar-1-output"
 					}
 				}
 			},
@@ -473,53 +517,6 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "vsk-pt-collections-ar-1-input",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"fileListPath": "vsk-pt-collections-ar-1-input",
-									"deleteFilesAfterCompletion": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "EloficashStorage",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "EloficashBackup",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
 						"name": "vsk-pt-collections-ar-1-output",
 						"type": "Copy",
 						"dependsOn": [],
@@ -536,7 +533,7 @@
 								"type": "BinarySource",
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
-									"fileListPath": "vsk-pt-collections-ar-1-output",
+									"recursive": true,
 									"deleteFilesAfterCompletion": false
 								},
 								"formatSettings": {
@@ -553,14 +550,61 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "EloficashStorage",
+								"referenceName": "EloficashVskPtCollectionsAr1Output",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "EloficashBackup",
+								"referenceName": "EloficashVskPtCollectionsAr1OutputBackup",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "vsk-pt-collections-ar-1-input",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"deleteFilesAfterCompletion": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "EloficashVskPtCollectionsAr1Input",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "EloficashVskPtCollectionsAr1InputBackup",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -570,8 +614,10 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/EloficashStorage')]",
-				"[concat(variables('factoryId'), '/datasets/EloficashBackup')]"
+				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1Output')]",
+				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1OutputBackup')]",
+				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1Input')]",
+				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1InputBackup')]"
 			]
 		},
 		{
@@ -664,37 +710,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/EloficashBackupTimer')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TriggerOrigenBackupTimer')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "OrigenBackupTimer",
-						"type": "PipelineReference"
-					},
-					"parameters": {}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 5,
-					"startTime": "2021-03-09T10:45:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/OrigenBackupTimer')]"
 			]
 		}
 	]
