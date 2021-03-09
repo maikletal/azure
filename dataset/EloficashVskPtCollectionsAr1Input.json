@@ -1,0 +1,17 @@
+{
+	"name": "EloficashVskPtCollectionsAr1Input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "EloficashStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "vsk-pt-collections-ar-1-input"
+			}
+		}
+	}
+}
