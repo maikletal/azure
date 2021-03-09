@@ -2,7 +2,7 @@
 	"name": "EloficashBackupTrigger",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipeline": {
 			"pipelineReference": {
 				"referenceName": "EloficashBackupTimer",
