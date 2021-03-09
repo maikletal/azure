@@ -1,0 +1,16 @@
+{
+	"name": "EloficashStorage",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "EloficashStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation"
+			}
+		}
+	}
+}

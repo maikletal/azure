@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "EloficashBackupTimer",
+				"name": "vsk-pt-collections-ar-1-input",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -13,23 +13,14 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [
-					{
-						"name": "Source",
-						"value": "origen//"
-					},
-					{
-						"name": "Destination",
-						"value": "backup//"
-					}
-				],
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "BinarySource",
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
-							"recursive": true,
-							"wildcardFileName": "*"
+							"fileListPath": "vsk-pt-collections-ar-1-input",
+							"deleteFilesAfterCompletion": false
 						},
 						"formatSettings": {
 							"type": "BinaryReadSettings"
@@ -41,22 +32,17 @@
 							"type": "AzureBlobStorageWriteSettings"
 						}
 					},
-					"enableStaging": false,
-					"enableSkipIncompatibleRow": false,
-					"skipErrorFile": {
-						"fileMissing": true
-					},
-					"validateDataConsistency": false
+					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "EloficashBinary",
+						"referenceName": "EloficashStorage",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDatasetOrigentoBackup",
+						"referenceName": "EloficashBackup",
 						"type": "DatasetReference"
 					}
 				]
