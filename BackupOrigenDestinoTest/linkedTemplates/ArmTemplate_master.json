@@ -19,6 +19,14 @@
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"secretAccessKey\"de \"GoogleCloudStorageOrigen\""
 		},
+		"EloficashStorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"connectionString\"de \"EloficashStorage\""
+		},
+		"EloficashBackup_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"connectionString\"de \"EloficashBackup\""
+		},
 		"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
 			"type": "string",
 			"defaultValue": "GOOG5MGH3Z2PYYCJL36SA6JD"
@@ -62,6 +70,12 @@
 					},
 					"GoogleCloudStorageOrigen_secretAccessKey": {
 						"value": "[parameters('GoogleCloudStorageOrigen_secretAccessKey')]"
+					},
+					"EloficashStorage_connectionString": {
+						"value": "[parameters('EloficashStorage_connectionString')]"
+					},
+					"EloficashBackup_connectionString": {
+						"value": "[parameters('EloficashBackup_connectionString')]"
 					},
 					"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
 						"value": "[parameters('GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId')]"

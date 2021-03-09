@@ -14,6 +14,12 @@
 		"GoogleCloudStorageOrigen_secretAccessKey": {
 			"value": ""
 		},
+		"EloficashStorage_connectionString": {
+			"value": ""
+		},
+		"EloficashBackup_connectionString": {
+			"value": ""
+		},
 		"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
 			"value": "GOOG5MGH3Z2PYYCJL36SA6JD"
 		},
