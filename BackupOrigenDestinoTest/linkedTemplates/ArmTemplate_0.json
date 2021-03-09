@@ -15,17 +15,17 @@
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"AzureBlobStorageOrigen\""
 		},
-		"GoogleCloudStorageOrigen_secretAccessKey": {
+		"EloficashBackup_connectionString": {
 			"type": "secureString",
-			"metadata": "Cadena protegida para \"secretAccessKey\"de \"GoogleCloudStorageOrigen\""
+			"metadata": "Cadena protegida para \"connectionString\"de \"EloficashBackup\""
 		},
 		"EloficashStorage_connectionString": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"EloficashStorage\""
 		},
-		"EloficashBackup_connectionString": {
+		"GoogleCloudStorageOrigen_secretAccessKey": {
 			"type": "secureString",
-			"metadata": "Cadena protegida para \"connectionString\"de \"EloficashBackup\""
+			"metadata": "Cadena protegida para \"secretAccessKey\"de \"GoogleCloudStorageOrigen\""
 		},
 		"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
 			"type": "string",
@@ -67,19 +67,14 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/GoogleCloudStorageOrigen')]",
+			"name": "[concat(parameters('factoryName'), '/EloficashBackup')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "GoogleCloudStorage",
+				"type": "AzureBlobStorage",
 				"typeProperties": {
-					"serviceUrl": "https://storage.googleapis.com",
-					"accessKeyId": "[parameters('GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId')]",
-					"secretAccessKey": {
-						"type": "SecureString",
-						"value": "[parameters('GoogleCloudStorageOrigen_secretAccessKey')]"
-					}
+					"connectionString": "[parameters('EloficashBackup_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -98,14 +93,19 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/EloficashBackup')]",
+			"name": "[concat(parameters('factoryName'), '/GoogleCloudStorageOrigen')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureBlobStorage",
+				"type": "GoogleCloudStorage",
 				"typeProperties": {
-					"connectionString": "[parameters('EloficashBackup_connectionString')]"
+					"serviceUrl": "https://storage.googleapis.com",
+					"accessKeyId": "[parameters('GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId')]",
+					"secretAccessKey": {
+						"type": "SecureString",
+						"value": "[parameters('GoogleCloudStorageOrigen_secretAccessKey')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -152,50 +152,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageBck')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDatasetGCStoOrigen')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "GoogleCloudStorageOrigen",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "GoogleCloudStorageLocation",
-						"bucketName": "azure_djklgh"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/GoogleCloudStorageOrigen')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDatasetOrigenToBackup')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorageOrigen",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "origen"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageOrigen')]"
 			]
 		},
 		{
@@ -284,6 +240,160 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/EloficashBackup')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDatasetGCStoOrigen')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "GoogleCloudStorageOrigen",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "GoogleCloudStorageLocation",
+						"bucketName": "azure_djklgh"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/GoogleCloudStorageOrigen')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDatasetOrigenToBackup')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorageOrigen",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "origen"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageOrigen')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/EloficashBackupTimer')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "vsk-pt-collections-ar-1-output",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"deleteFilesAfterCompletion": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "EloficashVskPtCollectionsAr1Output",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "EloficashVskPtCollectionsAr1OutputBackup",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "vsk-pt-collections-ar-1-input",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"deleteFilesAfterCompletion": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "EloficashVskPtCollectionsAr1Input",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "EloficashVskPtCollectionsAr1InputBackup",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1Output')]",
+				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1OutputBackup')]",
+				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1Input')]",
+				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1InputBackup')]"
 			]
 		},
 		{
@@ -511,116 +621,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/EloficashBackupTimer')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "vsk-pt-collections-ar-1-output",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"deleteFilesAfterCompletion": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "EloficashVskPtCollectionsAr1Output",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "EloficashVskPtCollectionsAr1OutputBackup",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "vsk-pt-collections-ar-1-input",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"deleteFilesAfterCompletion": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "EloficashVskPtCollectionsAr1Input",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "EloficashVskPtCollectionsAr1InputBackup",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1Output')]",
-				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1OutputBackup')]",
-				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1Input')]",
-				"[concat(variables('factoryId'), '/datasets/EloficashVskPtCollectionsAr1InputBackup')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DetectChanges')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -651,43 +651,12 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Trigger_082')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "GCSToOrigen",
-						"type": "PipelineReference"
-					},
-					"parameters": {}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 5,
-					"startTime": "2021-03-03T17:27:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/GCSToOrigen')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/EloficashBackupTrigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "EloficashBackupTimer",
@@ -710,6 +679,37 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/EloficashBackupTimer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TriggerOrigenBackupTimer')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "OrigenBackupTimer",
+						"type": "PipelineReference"
+					},
+					"parameters": {}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 5,
+					"startTime": "2021-03-09T10:45:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/OrigenBackupTimer')]"
 			]
 		}
 	]

@@ -15,17 +15,17 @@
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"AzureBlobStorageOrigen\""
 		},
-		"GoogleCloudStorageOrigen_secretAccessKey": {
+		"EloficashBackup_connectionString": {
 			"type": "secureString",
-			"metadata": "Cadena protegida para \"secretAccessKey\"de \"GoogleCloudStorageOrigen\""
+			"metadata": "Cadena protegida para \"connectionString\"de \"EloficashBackup\""
 		},
 		"EloficashStorage_connectionString": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"EloficashStorage\""
 		},
-		"EloficashBackup_connectionString": {
+		"GoogleCloudStorageOrigen_secretAccessKey": {
 			"type": "secureString",
-			"metadata": "Cadena protegida para \"connectionString\"de \"EloficashBackup\""
+			"metadata": "Cadena protegida para \"secretAccessKey\"de \"GoogleCloudStorageOrigen\""
 		},
 		"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
 			"type": "string",
@@ -68,14 +68,14 @@
 					"AzureBlobStorageOrigen_connectionString": {
 						"value": "[parameters('AzureBlobStorageOrigen_connectionString')]"
 					},
-					"GoogleCloudStorageOrigen_secretAccessKey": {
-						"value": "[parameters('GoogleCloudStorageOrigen_secretAccessKey')]"
+					"EloficashBackup_connectionString": {
+						"value": "[parameters('EloficashBackup_connectionString')]"
 					},
 					"EloficashStorage_connectionString": {
 						"value": "[parameters('EloficashStorage_connectionString')]"
 					},
-					"EloficashBackup_connectionString": {
-						"value": "[parameters('EloficashBackup_connectionString')]"
+					"GoogleCloudStorageOrigen_secretAccessKey": {
+						"value": "[parameters('GoogleCloudStorageOrigen_secretAccessKey')]"
 					},
 					"GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId": {
 						"value": "[parameters('GoogleCloudStorageOrigen_properties_typeProperties_accessKeyId')]"
