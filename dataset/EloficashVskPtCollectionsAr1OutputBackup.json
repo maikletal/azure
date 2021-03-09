@@ -1,0 +1,17 @@
+{
+	"name": "EloficashVskPtCollectionsAr1OutputBackup",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "EloficashBackup",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "vsk-pt-collections-ar-1-output"
+			}
+		}
+	}
+}
