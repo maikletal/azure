@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_082",
+				"name": "GCSToinput",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -55,7 +55,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDatasetGCStoOrigen",
+						"referenceName": "EloficashVskPtCollectionsAr1Input",
 						"type": "DatasetReference"
 					}
 				]
