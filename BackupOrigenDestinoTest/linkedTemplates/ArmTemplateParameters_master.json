@@ -5,12 +5,6 @@
 		"factoryName": {
 			"value": "BackupOrigenDestinoTest"
 		},
-		"AzureBlobStorageBck_connectionString": {
-			"value": ""
-		},
-		"AzureBlobStorageOrigen_connectionString": {
-			"value": ""
-		},
 		"EloficashBackup_connectionString": {
 			"value": ""
 		},

@@ -7,14 +7,6 @@
 			"metadata": "Nombre de instancia de Data Factory",
 			"defaultValue": "BackupOrigenDestinoTest"
 		},
-		"AzureBlobStorageBck_connectionString": {
-			"type": "secureString",
-			"metadata": "Cadena protegida para \"connectionString\"de \"AzureBlobStorageBck\""
-		},
-		"AzureBlobStorageOrigen_connectionString": {
-			"type": "secureString",
-			"metadata": "Cadena protegida para \"connectionString\"de \"AzureBlobStorageOrigen\""
-		},
 		"EloficashBackup_connectionString": {
 			"type": "secureString",
 			"metadata": "Cadena protegida para \"connectionString\"de \"EloficashBackup\""
@@ -61,12 +53,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"AzureBlobStorageBck_connectionString": {
-						"value": "[parameters('AzureBlobStorageBck_connectionString')]"
-					},
-					"AzureBlobStorageOrigen_connectionString": {
-						"value": "[parameters('AzureBlobStorageOrigen_connectionString')]"
 					},
 					"EloficashBackup_connectionString": {
 						"value": "[parameters('EloficashBackup_connectionString')]"
