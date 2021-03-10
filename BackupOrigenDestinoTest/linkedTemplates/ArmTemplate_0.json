@@ -111,12 +111,54 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DetectChanges')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/origen/blobs/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('DetectChanges_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TriggerOrigenBackupTimer')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 5,
+					"startTime": "2021-03-09T10:45:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDatasetGCStoOrigen')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureBlobStorageOrigen",
+					"referenceName": "EloficashStorage",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -124,34 +166,12 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"container": "origen"
+						"container": "vsk-pt-collections-ar-1-input"
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageOrigen')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDatasetOrigentoBackup')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorageBck",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "backup"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageBck')]"
+				"[concat(variables('factoryId'), '/linkedServices/EloficashStorage')]"
 			]
 		},
 		{
@@ -262,28 +282,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/GoogleCloudStorageOrigen')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDatasetOrigenToBackup')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorageOrigen",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "origen"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorageOrigen')]"
 			]
 		},
 		{
@@ -403,7 +401,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy_082",
+						"name": "GCSToinput",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -471,186 +469,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/OrigenBackupTimer')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "OrigenToBackupT",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "origen//"
-							},
-							{
-								"name": "Destination",
-								"value": "backup//"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*"
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"skipErrorFile": {
-								"fileMissing": true
-							},
-							"validateDataConsistency": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDatasetOrigenToBackup",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDatasetOrigentoBackup",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDatasetOrigenToBackup')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDatasetOrigentoBackup')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OrigenToBackupEvent')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "OrigenToBackupE",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "origen//"
-							},
-							{
-								"name": "Destination",
-								"value": "backup//"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*"
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"skipErrorFile": {
-								"fileMissing": true
-							},
-							"validateDataConsistency": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDatasetOrigenToBackup",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDatasetOrigentoBackup",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDatasetOrigenToBackup')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDatasetOrigentoBackup')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DetectChanges')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "OrigenToBackupEvent",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/origen/blobs/",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('DetectChanges_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/OrigenToBackupEvent')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/EloficashBackupTrigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -682,7 +500,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TriggerOrigenBackupTimer')]",
+			"name": "[concat(parameters('factoryName'), '/Trigger_082')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -690,7 +508,7 @@
 				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
-						"referenceName": "OrigenBackupTimer",
+						"referenceName": "GCSToOrigen",
 						"type": "PipelineReference"
 					},
 					"parameters": {}
@@ -699,7 +517,7 @@
 				"typeProperties": {
 					"frequency": "Minute",
 					"interval": 5,
-					"startTime": "2021-03-09T10:45:00Z",
+					"startTime": "2021-03-03T17:27:00Z",
 					"delay": "00:00:00",
 					"maxConcurrency": 50,
 					"retryPolicy": {
@@ -709,7 +527,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/OrigenBackupTimer')]"
+				"[concat(variables('factoryId'), '/pipelines/GCSToOrigen')]"
 			]
 		}
 	]
