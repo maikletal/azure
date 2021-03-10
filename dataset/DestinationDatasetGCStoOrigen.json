@@ -2,7 +2,7 @@
 	"name": "DestinationDatasetGCStoOrigen",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorageOrigen",
+			"referenceName": "EloficashStorage",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": "origen"
+				"container": "vsk-pt-collections-ar-1-input"
 			}
 		}
 	}
