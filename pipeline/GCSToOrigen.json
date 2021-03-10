@@ -55,7 +55,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "EloficashVskPtCollectionsAr1Input",
+						"referenceName": "DestinationDatasetGCStoOrigen",
 						"type": "DatasetReference"
 					}
 				]
